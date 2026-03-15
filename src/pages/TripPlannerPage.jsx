@@ -25,11 +25,11 @@ const MOCK_HOTELS = [
   { name: "Hôtel Lutetia", location: "Saint-Germain", rating: 4.9, reviews: "890", price: "₹24,000/night", type: "Luxury", img: "✨" },
 ];
 
-export default function TripPlannerPage({ initialDestination, onBack, theme, toggleTheme }) {
+export default function TripPlannerPage({ initialDestination, initialTab, onBack, theme, toggleTheme }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState("chat");
+  const [activeTab, setActiveTab] = useState(initialTab || "chat");
   const [destination, setDestination] = useState(initialDestination || "");
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
