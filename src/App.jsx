@@ -6,6 +6,7 @@ import "./index.css";
 export default function App() {
   const [page, setPage] = useState("landing");
   const [initialDestination, setInitialDestination] = useState("");
+  const [initialTab, setInitialTab] = useState("chat");
   const [theme, setTheme] = useState("light");
 
   useEffect(() => {
@@ -16,8 +17,9 @@ export default function App() {
     setTheme(prev => prev === "light" ? "dark" : "light");
   };
 
-  const goToPlanner = (destination = "") => {
+  const goToPlanner = ({ destination = "", tab = "chat" }) => {
     setInitialDestination(destination);
+    setInitialTab(tab);
     setPage("planner");
   };
 
@@ -28,6 +30,7 @@ export default function App() {
       ) : (
         <TripPlannerPage
           initialDestination={initialDestination}
+          initialTab={initialTab}
           onBack={() => setPage("landing")}
           theme={theme}
           toggleTheme={toggleTheme}

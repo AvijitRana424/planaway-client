@@ -2,27 +2,26 @@
 
 :root {
   /* LIGHT THEME (Default) */
-  --bg-main: #ffffff;
-  --bg-sidebar: #f8f9fa;
+  --bg-main: #f0f4f8; /* Soft blue-gray for better contrast and trust */
+  --bg-sidebar: #ffffff;
   --bg-card: #ffffff;
   --border-color: rgba(0, 0, 0, 0.08);
-  --gold: transparent;
-  /* Transparent button bg in light mode */
-  --gold-dim: rgba(217, 145, 0, 0.1);
-  --gold-hover: rgba(0, 0, 0, 0.04);
-  --gold-shadow: transparent;
-  --btn-text: #0a0e1a;
-  /* Dark text on transparent btn */
+  
+  --gold: #0052cc; /* Trustworthy blue primary color */
+  --gold-dim: rgba(0, 82, 204, 0.1); 
+  --gold-hover: #0043a6; 
+  --gold-shadow: rgba(0, 82, 204, 0.3);
+  
+  --btn-text: #ffffff; /* White text on blue buttons */
   --btn-border: transparent;
-  /* No border for light mode primary btns */
-  --brand-gold: #d99100;
-  /* Dedicated gold color for badges */
+  --brand-gold: #0052cc;
+  
   --sky: #3b82f6;
   --sky-dim: rgba(59, 130, 246, 0.1);
   --teal: #14b8a6;
   --coral: #ef4444;
-  --text-main: #0a0e1a;
-  --text-muted: #6b7280;
+  --text-main: #0a0e1a; /* Dark slate */
+  --text-muted: #5e6c84;
   --chip-bg: rgba(0, 0, 0, 0.04);
   --radius: 16px;
   --radius-sm: 10px;

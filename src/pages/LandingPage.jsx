@@ -1,12 +1,22 @@
 import { useState, useEffect } from "react";
-
-const DESTINATIONS = ["Paris, France", "Tokyo, Japan", "Bali, Indonesia", "New York, USA", "Rome, Italy", "Barcelona, Spain"];
+import { config } from "../config";
 
 export default function LandingPage({ onStart, theme, toggleTheme }) {
   const [query, setQuery] = useState("");
   const [placeholder, setPlaceholder] = useState(0);
   const [typed, setTyped] = useState("");
   const [stars, setStars] = useState([]);
+
+  const [flightSearch, setFlightSearch] = useState({
+    from: "",
+    to: "",
+    depart: "",
+    returnDate: "",
+    passengers: 1,
+    travelClass: "Economy"
+  });
+
+  const DESTINATIONS = config.hero.searchPlaceholderDestinations;
 
   useEffect(() => {
     const arr = Array.from({ length: 80 }, (_, i) => ({
@@ -32,11 +42,16 @@ export default function LandingPage({ onStart, theme, toggleTheme }) {
       }
     }, 70);
     return () => clearInterval(type);
-  }, [placeholder]);
+  }, [placeholder, DESTINATIONS]);
 
-  const handleSubmit = (e) => {
+  const handleTripSubmit = (e) => {
     e.preventDefault();
-    if (query.trim()) onStart(query.trim());
+    if (query.trim()) onStart({ destination: query.trim(), tab: 'chat' });
+  };
+
+  const handleFlightSubmit = (e) => {
+    e.preventDefault();
+    onStart({ destination: `Flight from ${flightSearch.from} to ${flightSearch.to}`, tab: 'flights' });
   };
 
   return (
@@ -59,64 +74,135 @@ export default function LandingPage({ onStart, theme, toggleTheme }) {
       {/* Nav */}
       <nav style={styles.nav}>
         <div style={styles.logo}>
-          <span style={styles.logoIcon}>✦</span>
-          <span style={styles.logoText}>MyScanner</span>
+          <span style={styles.logoIcon}>{config.nav.logoIcon}</span>
+          <span style={styles.logoText}>{config.nav.logoText}</span>
         </div>
         <div style={styles.navLinks}>
           <button onClick={toggleTheme} className="btn-ghost" style={{ fontSize: 16, padding: '6px 10px', borderRadius: '50%', border: 'none', marginRight: 4 }} title="Toggle theme">
             {theme === 'light' ? '🌙' : '☀️'}
           </button>
-          <button className="btn-ghost" style={{ fontSize: 13 }}>How it works</button>
-          <button className="btn-ghost" style={{ fontSize: 13 }}>Pricing</button>
-          <button className="btn-primary" style={{ padding: '10px 22px', fontSize: 13 }}>Sign in</button>
+          {config.nav.links.map(link => (
+            <button key={link.id} className="btn-ghost" style={{ fontSize: 13 }}>{link.label}</button>
+          ))}
+          <button className="btn-primary" style={{ padding: '10px 22px', fontSize: 13 }}>{config.nav.primaryButton}</button>
         </div>
       </nav>
 
       {/* Hero */}
       <div style={styles.hero}>
-        <div style={styles.badge}>
-          <span style={{ color: 'var(--gold)', marginRight: 6, animation: 'slideInRight 0.5s ease' }}>✦</span>
-          AI-Powered Travel Planning
-        </div>
+        
+        {/* Title */}
         <h1 style={styles.h1}>
-          Your entire trip,<br />
-          <span style={styles.h1Gold}>planned in seconds.</span>
+          {config.hero.titleLine1}<br />
+          <span style={styles.h1Gold}>{config.hero.titleLine2}</span>
         </h1>
+        
+        {/* Subtitle */}
         <p style={styles.subtitle}>
-          Don't just search for flights. Tell our AI where you want to go —<br />
-          it handles flights, hotels, itinerary and hidden gems. All in one chat.
+          {config.hero.subtitle}
         </p>
 
-        {/* Search bar */}
-        <form onSubmit={handleSubmit} style={styles.searchBar}>
-          <span style={styles.searchIcon}>🌍</span>
-          <input
-            style={styles.searchInput}
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            placeholder={`Try "${typed}"`}
-          />
-          <button type="submit" className="btn-primary" style={{ padding: '12px 28px', flexShrink: 0 }}>
-            Plan my trip <span className="arrow">→</span>
-          </button>
-        </form>
+        {/* Small AI Trip Planner Banner */}
+        <div style={styles.smallAiSearch}>
+           <div style={{display: 'flex', alignItems: 'center', gap: 8}}>
+             <span style={{fontSize: 16, color: 'var(--brand-gold)'}}>✨</span>
+             <span style={styles.smallAiText}>Plan your entire trip with AI</span>
+           </div>
+           <form onSubmit={handleTripSubmit} style={styles.smallSearchBar}>
+              <span style={{fontSize: 14, color: '#94a3b8'}}>🌍</span>
+              <input
+                style={styles.smallSearchInput}
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                placeholder={`Try "Paris, France"`}
+              />
+           </form>
+           <button type="submit" onClick={handleTripSubmit} className="btn-primary" style={{ padding: '10px 20px', fontSize: 14, borderRadius: 8 }}>
+             Plan my trip <span className="arrow">→</span>
+           </button>
+        </div>
 
-        {/* Quick chips */}
+        {/* Flight Search directly in Hero */}
+        <div style={styles.flightBox}>
+          
+          <div style={styles.flightTabs}>
+            <span style={styles.flightTabActive}>Round trip</span>
+            <span style={styles.flightTabInactive}>One way</span>
+          </div>
+
+          <form onSubmit={handleFlightSubmit} style={styles.flightForm}>
+            
+            <div style={styles.flightGrid}>
+               {/* Location Group */}
+               <div style={styles.flightLocationGroup}>
+                 <div style={styles.flightInputWrapper}>
+                   <label style={styles.flightLabelBlue}>FROM</label>
+                   <div style={styles.flightInputBlock}>
+                     <span style={styles.inputIcon}>📍</span>
+                     <input style={styles.flightInputInline} placeholder="City or airport" value={flightSearch.from} onChange={e => setFlightSearch({...flightSearch, from: e.target.value})} required/>
+                   </div>
+                 </div>
+
+                 <div style={styles.flightSwapBtn}>⇄</div>
+
+                 <div style={styles.flightInputWrapper}>
+                   <label style={styles.flightLabelBlue}>TO</label>
+                   <div style={styles.flightInputBlock}>
+                     <span style={styles.inputIcon}>📍</span>
+                     <input style={styles.flightInputInline} placeholder="City or airport" value={flightSearch.to} onChange={e => setFlightSearch({...flightSearch, to: e.target.value})} required/>
+                   </div>
+                 </div>
+               </div>
+
+               {/* Dates Group */}
+               <div style={styles.flightDatesGroup}>
+                 <div style={styles.flightInputWrapper}>
+                   <label style={styles.flightLabelBlue}>DEPART</label>
+                   <div style={styles.flightInputBlock}>
+                     <span style={styles.inputIcon}>📅</span>
+                     <input style={styles.flightInputInline} type="date" value={flightSearch.depart} onChange={e => setFlightSearch({...flightSearch, depart: e.target.value})} />
+                   </div>
+                 </div>
+
+                 <div style={styles.flightInputWrapper}>
+                   <label style={styles.flightLabelBlue}>RETURN</label>
+                   <div style={styles.flightInputBlock}>
+                     <span style={styles.inputIcon}>📅</span>
+                     <input style={styles.flightInputInline} type="date" value={flightSearch.returnDate} onChange={e => setFlightSearch({...flightSearch, returnDate: e.target.value})} />
+                   </div>
+                 </div>
+               </div>
+            </div>
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center' }}>
+              <div style={styles.flightInputWrapper}>
+                <div style={styles.flightInputBlock}>
+                  <span style={styles.inputIcon}>👥</span>
+                  <span style={{fontSize: 14, color: '#334155', fontWeight: 500}}>{flightSearch.passengers} Adult, Economy</span>
+                </div>
+              </div>
+              
+              <button type="submit" className="btn-primary" style={{ padding: '12px 28px', fontSize: 16, fontWeight: 600, borderRadius: 8, flex: '1 1 200px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, maxWidth: 300 }}>
+                🔍 Search Flights
+              </button>
+            </div>
+            
+          </form>
+        </div>
+
+
+
+        {/* Quick chips below search */}
         <div style={styles.chips}>
-          {["Europe 10 days", "Budget Asia trip", "Honeymoon Maldives", "Solo Japan"].map(c => (
-            <button key={c} onClick={() => onStart(c)} style={styles.chip}>{c}</button>
+          {config.hero.quickChips.map(c => (
+            <button key={c} onClick={() => onStart({ destination: c, tab: 'chat' })} style={styles.chip}>{c}</button>
           ))}
         </div>
       </div>
 
       {/* Features */}
       <div style={styles.features}>
-        {[
-          { icon: "🤖", title: "AI Tour Guide", desc: "Just type your destination. The bot asks your budget, style and dates — then builds your perfect trip." },
-          { icon: "✈️", title: "Best Flight Finder", desc: "Compares hundreds of airlines in real time. Always finds the cheapest route, with layover options." },
-          { icon: "🏨", title: "Hotel Matcher", desc: "Matches hotels to your travel style — boutique, budget, luxury — with real guest ratings." },
-          { icon: "🗺️", title: "Smart Itinerary", desc: "Day-by-day plan with timings, transport tips, local food spots and things most tourists miss." },
-        ].map(f => (
+        {config.features.map(f => (
           <div key={f.title} style={styles.featureCard}>
             <div style={styles.featureIcon}>{f.icon}</div>
             <h3 style={styles.featureTitle}>{f.title}</h3>
@@ -125,21 +211,12 @@ export default function LandingPage({ onStart, theme, toggleTheme }) {
         ))}
       </div>
 
-      {/* Stats */}
-      <div style={styles.stats}>
-        {[["2M+", "Trips planned"], ["180+", "Countries covered"], ["4.9★", "User rating"], ["₹0", "Planning fee"]].map(([n, l]) => (
-          <div key={l} style={styles.stat}>
-            <div style={styles.statNum}>{n}</div>
-            <div style={styles.statLabel}>{l}</div>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
 
 const styles = {
-  page: { minHeight: '100vh', position: 'relative', overflow: 'hidden', background: 'var(--bg-main)' },
+  page: { minHeight: '100vh', position: 'relative', overflowX: 'hidden', background: 'var(--bg-main)' },
   stars: { position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 },
   orb: { position: 'fixed', borderRadius: '50%', pointerEvents: 'none', zIndex: 0 },
   nav: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 48px', position: 'relative', zIndex: 10 },
@@ -147,23 +224,45 @@ const styles = {
   logoIcon: { color: 'var(--gold)', fontSize: 20 },
   logoText: { fontFamily: 'Playfair Display, serif', fontSize: 22, fontWeight: 600, color: 'var(--text-main)' },
   navLinks: { display: 'flex', gap: 12, alignItems: 'center' },
-  hero: { textAlign: 'center', padding: '80px 24px 60px', position: 'relative', zIndex: 5 },
+  hero: { textAlign: 'center', padding: '20px 24px 60px', position: 'relative', zIndex: 5 },
   badge: { display: 'inline-flex', alignItems: 'center', background: 'var(--gold-dim)', border: '1px solid var(--border-color)', borderRadius: 50, padding: '6px 16px', fontSize: 13, color: 'var(--text-main)', marginBottom: 28 },
-  h1: { fontFamily: 'Playfair Display, serif', fontSize: 'clamp(36px, 6vw, 72px)', fontWeight: 700, lineHeight: 1.15, color: 'var(--text-main)', marginBottom: 20 },
+  h1: { fontFamily: 'Playfair Display, serif', fontSize: 'clamp(28px, 4vw, 52px)', fontWeight: 700, lineHeight: 1.15, color: 'var(--text-main)', marginBottom: 20 },
   h1Gold: { color: 'var(--text-main)' },
-  subtitle: { fontSize: 17, color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: 40 },
-  searchBar: { display: 'flex', alignItems: 'center', gap: 12, background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 60, padding: '8px 8px 8px 20px', maxWidth: 620, margin: '0 auto 20px', boxShadow: '0 24px 64px rgba(0,0,0,0.4)' },
-  searchIcon: { fontSize: 20, flexShrink: 0 },
-  searchInput: { flex: 1, background: 'transparent', border: 'none', outline: 'none', fontSize: 15, color: 'var(--text-main)', fontFamily: 'DM Sans, sans-serif', minWidth: 0 },
+  
+  subtitle: { fontSize: 16, color: '#64748b', lineHeight: 1.6, marginBottom: 32, maxWidth: 600, margin: '0 auto 32px' },
+
+  smallAiSearch: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginBottom: 40, background: '#f8faff', padding: '10px 10px 10px 24px', borderRadius: 12, border: '1px solid #e2e8f0', boxShadow: '0 2px 4px rgba(0,0,0,0.02)', width: '90%', maxWidth: 700, margin: '0 auto 40px auto', flexWrap: 'wrap' },
+  smallAiText: { fontSize: 15, color: '#1e293b', fontWeight: 500 },
+  smallSearchBar: { display: 'flex', alignItems: 'center', gap: 8, background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: 8, padding: '10px 16px', flex: '1 1 200px' },
+  smallSearchInput: { background: 'transparent', border: 'none', outline: 'none', fontSize: 15, color: '#0f172a', fontFamily: 'DM Sans, sans-serif', width: '100%' },
+
+  flightBox: { maxWidth: 960, width: '90%', margin: '0 auto', position: 'relative', zIndex: 10, boxShadow: '0 10px 40px rgba(0,0,0,0.08)', borderRadius: 16, background: '#ffffff', padding: '32px 32px', textAlign: 'left' },
+  flightTabs: { display: 'flex', gap: 24, marginBottom: 24, borderBottom: '1px solid transparent' },
+  flightTabActive: { fontSize: 14, fontWeight: 600, color: '#2563eb', paddingBottom: 8, borderBottom: '2px solid #2563eb', cursor: 'pointer' },
+  flightTabInactive: { fontSize: 14, fontWeight: 500, color: '#64748b', paddingBottom: 8, cursor: 'pointer' },
+
+  flightForm: { display: 'flex', flexDirection: 'column', gap: 24 },
+  flightGrid: { display: 'flex', alignItems: 'flex-start', gap: 16, position: 'relative', flexWrap: 'wrap', width: '100%' },
+  
+  flightLocationGroup: { display: 'flex', flex: '2 1 400px', gap: 16, position: 'relative', minWidth: 300 },
+  flightDatesGroup: { display: 'flex', flex: '1.2 1 280px', gap: 16, minWidth: 280 },
+
+  flightInputWrapper: { display: 'flex', flexDirection: 'column', gap: 8, flex: 1, position: 'relative', minWidth: 0 },
+  flightLabelBlue: { fontSize: 11, fontWeight: 700, color: '#2563eb', textTransform: 'uppercase', letterSpacing: '0.5px', textAlign: 'left' },
+  
+  flightInputBlock: { display: 'flex', alignItems: 'center', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: 8, padding: '12px 16px', gap: 10, width: '100%' },
+  inputIcon: { fontSize: 16, color: '#94a3b8' },
+  flightInputInline: { background: 'transparent', border: 'none', outline: 'none', fontSize: 14, color: '#0f172a', fontFamily: 'DM Sans, sans-serif', width: '100%', fontWeight: 500, minWidth: 50 },
+  
+  flightSwapBtn: { position: 'absolute', left: '50%', top: '34px', transform: 'translateX(-50%)', width: 32, height: 32, background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2, cursor: 'pointer', fontSize: 14, color: '#64748b', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' },
+
   chips: { display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' },
   chip: { background: 'var(--chip-bg)', border: '1px solid var(--border-color)', borderRadius: 50, padding: '8px 18px', fontSize: 13, color: 'var(--text-muted)', cursor: 'pointer', transition: 'all 0.2s', fontFamily: 'DM Sans, sans-serif' },
+
   features: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 20, padding: '40px 48px', position: 'relative', zIndex: 5 },
   featureCard: { background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius)', padding: '28px 24px', transition: 'border-color 0.2s' },
   featureIcon: { fontSize: 28, marginBottom: 14 },
   featureTitle: { fontFamily: 'Playfair Display, serif', fontSize: 18, fontWeight: 600, marginBottom: 10, color: 'var(--text-main)' },
-  featureDesc: { fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.65 },
-  stats: { display: 'flex', justifyContent: 'center', gap: 60, padding: '40px 48px 60px', flexWrap: 'wrap', position: 'relative', zIndex: 5 },
-  stat: { textAlign: 'center' },
-  statNum: { fontFamily: 'Playfair Display, serif', fontSize: 36, fontWeight: 700, color: 'var(--gold)' },
-  statLabel: { fontSize: 13, color: 'var(--text-muted)', marginTop: 4 },
+  featureDesc: { fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.65 }
 };
+
