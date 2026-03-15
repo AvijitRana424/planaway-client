@@ -25,7 +25,7 @@ export function FlightCard({ airline, from, to, duration, stops, price, badge, l
       <div style={styles.cardRight}>
         {badge && <div style={styles.badge}>{badge}</div>}
         <div style={styles.price}>{price}</div>
-        <p style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 10 }}>per person</p>
+        <p style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 10 }}>per person</p>
         <button className="btn-primary" style={{ padding: '9px 20px', fontSize: 13 }}>Select</button>
       </div>
     </div>
@@ -35,20 +35,20 @@ export function FlightCard({ airline, from, to, duration, stops, price, badge, l
 export default FlightCard;
 
 const styles = {
-  card: { background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20, transition: 'border-color 0.2s' },
+  card: { background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius)', padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20, transition: 'border-color 0.2s' },
   cardLeft: { flex: 1 },
   airline: { display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 },
-  airlineName: { fontSize: 14, fontWeight: 500, color: 'var(--text)' },
+  airlineName: { fontSize: 14, fontWeight: 500, color: 'var(--text-main)' },
   route: { display: 'flex', alignItems: 'center', gap: 12 },
-  airport: { fontSize: 22, fontWeight: 600, fontFamily: 'Playfair Display, serif', color: 'var(--text)' },
+  airport: { fontSize: 22, fontWeight: 600, fontFamily: 'Playfair Display, serif', color: 'var(--text-main)' },
   routeLine: { flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 },
-  duration: { fontSize: 11, color: 'var(--muted)' },
+  duration: { fontSize: 11, color: 'var(--text-muted)' },
   line: { display: 'flex', alignItems: 'center', gap: 4, width: '100%' },
-  dot: { width: 5, height: 5, borderRadius: '50%', background: 'var(--muted)', flexShrink: 0 },
-  lineBar: { flex: 1, height: 1, background: 'var(--border)' },
+  dot: { width: 5, height: 5, borderRadius: '50%', background: 'var(--text-muted)', flexShrink: 0 },
+  lineBar: { flex: 1, height: 1, background: 'var(--border-color)' },
   planeIcon: { fontSize: 12, color: 'var(--sky)', flexShrink: 0 },
-  stops: { fontSize: 11, color: 'var(--muted)' },
+  stops: { fontSize: 11, color: 'var(--text-muted)' },
   cardRight: { textAlign: 'right', flexShrink: 0 },
   badge: { display: 'inline-block', background: 'var(--gold-dim)', border: '1px solid rgba(240,180,41,0.3)', borderRadius: 50, padding: '3px 10px', fontSize: 11, color: 'var(--gold)', marginBottom: 8 },
-  price: { fontSize: 22, fontWeight: 600, fontFamily: 'Playfair Display, serif', color: 'var(--text)' },
+  price: { fontSize: 22, fontWeight: 600, fontFamily: 'Playfair Display, serif', color: 'var(--text-main)' },
 };

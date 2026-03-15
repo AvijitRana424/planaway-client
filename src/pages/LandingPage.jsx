@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 const DESTINATIONS = ["Paris, France", "Tokyo, Japan", "Bali, Indonesia", "New York, USA", "Rome, Italy", "Barcelona, Spain"];
 
-export default function LandingPage({ onStart }) {
+export default function LandingPage({ onStart, theme, toggleTheme }) {
   const [query, setQuery] = useState("");
   const [placeholder, setPlaceholder] = useState(0);
   const [typed, setTyped] = useState("");
@@ -63,6 +63,9 @@ export default function LandingPage({ onStart }) {
           <span style={styles.logoText}>MyScanner</span>
         </div>
         <div style={styles.navLinks}>
+          <button onClick={toggleTheme} className="btn-ghost" style={{fontSize: 16, padding: '6px 10px', borderRadius: '50%', border: 'none', marginRight: 4}} title="Toggle theme">
+            {theme === 'light' ? '🌙' : '☀️'}
+          </button>
           <button className="btn-ghost" style={{fontSize:13}}>How it works</button>
           <button className="btn-ghost" style={{fontSize:13}}>Pricing</button>
           <button className="btn-primary" style={{padding:'10px 22px', fontSize:13}}>Sign in</button>
@@ -136,31 +139,31 @@ export default function LandingPage({ onStart }) {
 }
 
 const styles = {
-  page: { minHeight: '100vh', position: 'relative', overflow: 'hidden', background: 'var(--night)' },
+  page: { minHeight: '100vh', position: 'relative', overflow: 'hidden', background: 'var(--bg-main)' },
   stars: { position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 },
   orb: { position: 'fixed', borderRadius: '50%', pointerEvents: 'none', zIndex: 0 },
   nav: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 48px', position: 'relative', zIndex: 10 },
   logo: { display: 'flex', alignItems: 'center', gap: 10 },
   logoIcon: { color: 'var(--gold)', fontSize: 20 },
-  logoText: { fontFamily: 'Playfair Display, serif', fontSize: 22, fontWeight: 600, color: 'var(--text)' },
+  logoText: { fontFamily: 'Playfair Display, serif', fontSize: 22, fontWeight: 600, color: 'var(--text-main)' },
   navLinks: { display: 'flex', gap: 12, alignItems: 'center' },
   hero: { textAlign: 'center', padding: '80px 24px 60px', position: 'relative', zIndex: 5 },
   badge: { display: 'inline-flex', alignItems: 'center', background: 'rgba(240,180,41,0.1)', border: '1px solid rgba(240,180,41,0.25)', borderRadius: 50, padding: '6px 16px', fontSize: 13, color: 'var(--gold)', marginBottom: 28 },
-  h1: { fontFamily: 'Playfair Display, serif', fontSize: 'clamp(36px, 6vw, 72px)', fontWeight: 700, lineHeight: 1.15, color: 'var(--text)', marginBottom: 20 },
+  h1: { fontFamily: 'Playfair Display, serif', fontSize: 'clamp(36px, 6vw, 72px)', fontWeight: 700, lineHeight: 1.15, color: 'var(--text-main)', marginBottom: 20 },
   h1Gold: { color: 'var(--gold)' },
-  subtitle: { fontSize: 17, color: 'var(--muted)', lineHeight: 1.7, marginBottom: 40 },
-  searchBar: { display: 'flex', alignItems: 'center', gap: 12, background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 60, padding: '8px 8px 8px 20px', maxWidth: 620, margin: '0 auto 20px', boxShadow: '0 24px 64px rgba(0,0,0,0.4)' },
+  subtitle: { fontSize: 17, color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: 40 },
+  searchBar: { display: 'flex', alignItems: 'center', gap: 12, background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 60, padding: '8px 8px 8px 20px', maxWidth: 620, margin: '0 auto 20px', boxShadow: '0 24px 64px rgba(0,0,0,0.4)' },
   searchIcon: { fontSize: 20, flexShrink: 0 },
-  searchInput: { flex: 1, background: 'transparent', border: 'none', outline: 'none', fontSize: 15, color: 'var(--text)', fontFamily: 'DM Sans, sans-serif', minWidth: 0 },
+  searchInput: { flex: 1, background: 'transparent', border: 'none', outline: 'none', fontSize: 15, color: 'var(--text-main)', fontFamily: 'DM Sans, sans-serif', minWidth: 0 },
   chips: { display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' },
-  chip: { background: 'rgba(255,255,255,0.04)', border: '1px solid var(--border)', borderRadius: 50, padding: '8px 18px', fontSize: 13, color: 'var(--muted)', cursor: 'pointer', transition: 'all 0.2s', fontFamily: 'DM Sans, sans-serif' },
+  chip: { background: 'var(--chip-bg)', border: '1px solid var(--border-color)', borderRadius: 50, padding: '8px 18px', fontSize: 13, color: 'var(--text-muted)', cursor: 'pointer', transition: 'all 0.2s', fontFamily: 'DM Sans, sans-serif' },
   features: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 20, padding: '40px 48px', position: 'relative', zIndex: 5 },
-  featureCard: { background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '28px 24px', transition: 'border-color 0.2s' },
+  featureCard: { background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius)', padding: '28px 24px', transition: 'border-color 0.2s' },
   featureIcon: { fontSize: 28, marginBottom: 14 },
-  featureTitle: { fontFamily: 'Playfair Display, serif', fontSize: 18, fontWeight: 600, marginBottom: 10, color: 'var(--text)' },
-  featureDesc: { fontSize: 14, color: 'var(--muted)', lineHeight: 1.65 },
+  featureTitle: { fontFamily: 'Playfair Display, serif', fontSize: 18, fontWeight: 600, marginBottom: 10, color: 'var(--text-main)' },
+  featureDesc: { fontSize: 14, color: 'var(--text-muted)', lineHeight: 1.65 },
   stats: { display: 'flex', justifyContent: 'center', gap: 60, padding: '40px 48px 60px', flexWrap: 'wrap', position: 'relative', zIndex: 5 },
   stat: { textAlign: 'center' },
   statNum: { fontFamily: 'Playfair Display, serif', fontSize: 36, fontWeight: 700, color: 'var(--gold)' },
-  statLabel: { fontSize: 13, color: 'var(--muted)', marginTop: 4 },
+  statLabel: { fontSize: 13, color: 'var(--text-muted)', marginTop: 4 },
 };

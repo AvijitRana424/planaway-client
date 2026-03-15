@@ -25,7 +25,7 @@ const MOCK_HOTELS = [
   { name: "Hôtel Lutetia", location: "Saint-Germain", rating: 4.9, reviews: "890", price: "₹24,000/night", type: "Luxury", img: "✨" },
 ];
 
-export default function TripPlannerPage({ initialDestination, onBack }) {
+export default function TripPlannerPage({ initialDestination, onBack, theme, toggleTheme }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -148,6 +148,9 @@ export default function TripPlannerPage({ initialDestination, onBack }) {
                 {t.label}
               </button>
             ))}
+            <button onClick={toggleTheme} className="btn-ghost" style={{fontSize: 16, padding: '4px 8px', borderRadius: '50%', border: 'none', marginLeft: 8}} title="Toggle theme">
+              {theme === 'light' ? '🌙' : '☀️'}
+            </button>
           </div>
         </div>
 
@@ -208,7 +211,7 @@ export default function TripPlannerPage({ initialDestination, onBack }) {
               {MOCK_FLIGHTS.map((f, i) => <FlightCard key={i} {...f} />)}
             </div>
             <div style={styles.askAI}>
-              <p style={{ color: 'var(--muted)', fontSize: 14 }}>Not sure which to pick?</p>
+              <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>Not sure which to pick?</p>
               <button className="btn-primary" onClick={() => { setActiveTab("chat"); send("Which of these flights should I book and why?"); }}
                 style={{ padding: '10px 22px', fontSize: 14 }}>
                 Ask AI to decide ✦
@@ -229,7 +232,7 @@ export default function TripPlannerPage({ initialDestination, onBack }) {
               {MOCK_HOTELS.map((h, i) => <HotelCard key={i} {...h} />)}
             </div>
             <div style={styles.askAI}>
-              <p style={{ color: 'var(--muted)', fontSize: 14 }}>Tell the AI your preferences for better picks</p>
+              <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>Tell the AI your preferences for better picks</p>
               <button className="btn-primary" onClick={() => { setActiveTab("chat"); send("Recommend the best hotel for my trip based on my budget and style"); }}
                 style={{ padding: '10px 22px', fontSize: 14 }}>
                 Ask AI to pick ✦
@@ -244,7 +247,7 @@ export default function TripPlannerPage({ initialDestination, onBack }) {
             <div style={styles.itineraryEmpty}>
               <div style={{ fontSize: 48, marginBottom: 16 }}>🗺️</div>
               <h3 style={{ fontFamily: 'Playfair Display, serif', fontSize: 22, marginBottom: 10 }}>No itinerary yet</h3>
-              <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 24 }}>
+              <p style={{ color: 'var(--text-muted)', fontSize: 14, marginBottom: 24 }}>
                 Ask the AI to build your day-by-day itinerary and it will appear here.
               </p>
               <button className="btn-primary" onClick={() => { setActiveTab("chat"); send("Build me a complete day-by-day itinerary for my trip"); }}>
@@ -264,47 +267,47 @@ export default function TripPlannerPage({ initialDestination, onBack }) {
 }
 
 const styles = {
-  page: { display: 'flex', height: '100vh', background: 'var(--night)', overflow: 'hidden' },
+  page: { display: 'flex', height: '100vh', background: 'var(--bg-main)', overflow: 'hidden' },
 
   // Sidebar
-  sidebar: { width: 240, background: 'var(--deep)', borderRight: '1px solid var(--border)', display: 'flex', flexDirection: 'column', padding: '20px 16px', flexShrink: 0 },
-  sidebarLogo: { fontFamily: 'Playfair Display, serif', fontSize: 18, fontWeight: 600, color: 'var(--text)', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 },
+  sidebar: { width: 240, background: 'var(--bg-sidebar)', borderRight: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', padding: '20px 16px', flexShrink: 0 },
+  sidebarLogo: { fontFamily: 'Playfair Display, serif', fontSize: 18, fontWeight: 600, color: 'var(--text-main)', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 20 },
   newTrip: { background: 'var(--gold-dim)', border: '1px solid rgba(240,180,41,0.3)', borderRadius: 'var(--radius-sm)', padding: '10px 16px', color: 'var(--gold)', fontSize: 13, cursor: 'pointer', fontFamily: 'DM Sans, sans-serif', marginBottom: 24, transition: 'all 0.2s' },
   sidebarSection: { marginBottom: 28 },
-  sidebarLabel: { fontSize: 11, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8, paddingLeft: 8 },
-  sidebarTab: { display: 'flex', alignItems: 'center', gap: 10, width: '100%', background: 'transparent', border: 'none', borderRadius: 'var(--radius-sm)', padding: '10px 12px', color: 'var(--muted)', fontSize: 14, cursor: 'pointer', transition: 'all 0.2s', fontFamily: 'DM Sans, sans-serif', marginBottom: 2, textAlign: 'left' },
-  sidebarTabActive: { background: 'rgba(255,255,255,0.06)', color: 'var(--text)' },
-  tripMeta: { background: 'rgba(255,255,255,0.03)', borderRadius: 'var(--radius-sm)', padding: '12px', border: '1px solid var(--border)' },
-  tripMetaItem: { display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--muted)', marginBottom: 8 },
+  sidebarLabel: { fontSize: 11, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 8, paddingLeft: 8 },
+  sidebarTab: { display: 'flex', alignItems: 'center', gap: 10, width: '100%', background: 'transparent', border: 'none', borderRadius: 'var(--radius-sm)', padding: '10px 12px', color: 'var(--text-muted)', fontSize: 14, cursor: 'pointer', transition: 'all 0.2s', fontFamily: 'DM Sans, sans-serif', marginBottom: 2, textAlign: 'left' },
+  sidebarTabActive: { background: 'var(--chip-bg)', color: 'var(--text-main)' },
+  tripMeta: { background: 'var(--chip-bg)', borderRadius: 'var(--radius-sm)', padding: '12px', border: '1px solid var(--border-color)' },
+  tripMetaItem: { display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--text-muted)', marginBottom: 8 },
   tripMetaIcon: { fontSize: 14 },
   sidebarFooter: { marginTop: 'auto' },
   aiBadge: { background: 'var(--gold-dim)', border: '1px solid rgba(240,180,41,0.2)', borderRadius: 8, padding: '8px 12px', fontSize: 12, color: 'var(--gold)', display: 'flex', alignItems: 'center', gap: 6 },
 
   // Main
   main: { flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' },
-  header: { padding: '20px 28px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 },
+  header: { padding: '20px 28px', borderBottom: '1px solid var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 },
   headerTitle: { fontFamily: 'Playfair Display, serif', fontSize: 20, fontWeight: 600 },
-  headerSub: { fontSize: 13, color: 'var(--muted)', marginTop: 3 },
+  headerSub: { fontSize: 13, color: 'var(--text-muted)', marginTop: 3 },
   headerTabs: { display: 'flex', gap: 6 },
-  headerTab: { background: 'transparent', border: '1px solid var(--border)', borderRadius: 50, padding: '7px 16px', fontSize: 13, color: 'var(--muted)', cursor: 'pointer', fontFamily: 'DM Sans, sans-serif', transition: 'all 0.2s' },
-  headerTabActive: { background: 'var(--card)', color: 'var(--text)', borderColor: 'rgba(255,255,255,0.15)' },
+  headerTab: { background: 'transparent', border: '1px solid var(--border-color)', borderRadius: 50, padding: '7px 16px', fontSize: 13, color: 'var(--text-muted)', cursor: 'pointer', fontFamily: 'DM Sans, sans-serif', transition: 'all 0.2s' },
+  headerTabActive: { background: 'var(--bg-card)', color: 'var(--text-main)', borderColor: 'var(--border-color)' },
 
   // Chat
   chatArea: { flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' },
   messages: { flex: 1, overflowY: 'auto', padding: '24px 28px', display: 'flex', flexDirection: 'column', gap: 16 },
-  typing: { display: 'flex', gap: 5, padding: '12px 16px', background: 'var(--card)', borderRadius: 16, width: 'fit-content', alignItems: 'center' },
-  typingDot: { width: 7, height: 7, borderRadius: '50%', background: 'var(--muted)', display: 'inline-block', animation: 'blink 1.2s infinite' },
+  typing: { display: 'flex', gap: 5, padding: '12px 16px', background: 'var(--bg-card)', borderRadius: 16, width: 'fit-content', alignItems: 'center' },
+  typingDot: { width: 7, height: 7, borderRadius: '50%', background: 'var(--text-muted)', display: 'inline-block', animation: 'blink 1.2s infinite' },
   quickReplies: { display: 'flex', gap: 8, padding: '0 28px 12px', flexWrap: 'wrap' },
-  quickReply: { background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 50, padding: '7px 14px', fontSize: 12, color: 'var(--muted)', cursor: 'pointer', fontFamily: 'DM Sans, sans-serif', transition: 'all 0.2s', whiteSpace: 'nowrap' },
-  inputBar: { display: 'flex', gap: 12, padding: '12px 28px 20px', borderTop: '1px solid var(--border)', alignItems: 'center' },
-  input: { flex: 1, background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 50, padding: '13px 20px', fontSize: 14, color: 'var(--text)', outline: 'none', fontFamily: 'DM Sans, sans-serif' },
+  quickReply: { background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 50, padding: '7px 14px', fontSize: 12, color: 'var(--text-muted)', cursor: 'pointer', fontFamily: 'DM Sans, sans-serif', transition: 'all 0.2s', whiteSpace: 'nowrap' },
+  inputBar: { display: 'flex', gap: 12, padding: '12px 28px 20px', borderTop: '1px solid var(--border-color)', alignItems: 'center' },
+  input: { flex: 1, background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 50, padding: '13px 20px', fontSize: 14, color: 'var(--text-main)', outline: 'none', fontFamily: 'DM Sans, sans-serif' },
 
   // Cards
   cardsArea: { flex: 1, overflowY: 'auto', padding: '24px 28px' },
   filterBar: { display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' },
-  filterChip: { background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 50, padding: '8px 18px', fontSize: 13, color: 'var(--muted)', cursor: 'pointer', fontFamily: 'DM Sans, sans-serif' },
+  filterChip: { background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: 50, padding: '8px 18px', fontSize: 13, color: 'var(--text-muted)', cursor: 'pointer', fontFamily: 'DM Sans, sans-serif' },
   filterChipActive: { background: 'var(--gold-dim)', border: '1px solid rgba(240,180,41,0.4)', color: 'var(--gold)' },
   cardGrid: { display: 'flex', flexDirection: 'column', gap: 14 },
-  askAI: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginTop: 24, padding: '20px', background: 'var(--card)', borderRadius: 'var(--radius)', border: '1px solid var(--border)' },
+  askAI: { display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 16, marginTop: 24, padding: '20px', background: 'var(--bg-card)', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)' },
   itineraryEmpty: { display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', textAlign: 'center', padding: 40 },
 };
