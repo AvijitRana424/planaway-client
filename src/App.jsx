@@ -1,22 +1,27 @@
-import { BrowserRouter } from 'react-router-dom'
-import { AuthProvider } from './context/AuthContext'
-import AppRouter from './router/AppRouter'
-import Navbar from './components/Navbar'
-import './App.css'
+import { useState } from "react";
+import LandingPage from "./pages/LandingPage";
+import TripPlannerPage from "./pages/TripPlannerPage";
+import "./index.css";
 
-function App() {
+export default function App() {
+  const [page, setPage] = useState("landing");
+  const [initialDestination, setInitialDestination] = useState("");
+
+  const goToPlanner = (destination = "") => {
+    setInitialDestination(destination);
+    setPage("planner");
+  };
+
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <div className="app">
-          <Navbar />
-          <main className="main-content">
-            <AppRouter />
-          </main>
-        </div>
-      </AuthProvider>
-    </BrowserRouter>
-  )
+    <div className="app">
+      {page === "landing" ? (
+        <LandingPage onStart={goToPlanner} />
+      ) : (
+        <TripPlannerPage
+          initialDestination={initialDestination}
+          onBack={() => setPage("landing")}
+        />
+      )}
+    </div>
+  );
 }
-
-export default App
